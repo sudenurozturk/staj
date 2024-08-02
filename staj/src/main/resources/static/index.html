@@ -53,13 +53,19 @@
             font-weight: bold;
             color: #e94e77;
         }
-        .search-container {
+        .search-container, .sort-container {
             text-align: center;
             margin-bottom: 20px;
         }
         input[type="text"] {
             padding: 10px;
             width: 300px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        select {
+            padding: 10px;
+            width: 150px;
             border-radius: 4px;
             border: 1px solid #ddd;
         }
@@ -73,6 +79,31 @@
         }
         button:hover {
             background-color: #d43f60;
+        }
+        .seller-info {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .seller-info .rating-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .rating-high {
+            background-color: #4CAF50;
+        }
+        .rating-medium {
+            background-color: #FFC107;
+        }
+        .rating-low {
+            background-color: #F44336;
         }
     </style>
     <script>
@@ -97,11 +128,11 @@
             'Headphone': 'https://i.pinimg.com/474x/46/4e/88/464e8802e9c14777e03847a04ea107b3.jpg',
             'Klima C': 'https://i.pinimg.com/474x/32/c3/4f/32c34fbd4afd61ae418858cab5753be6.jpg',
             'Klima D': 'https://i.pinimg.com/474x/f6/c9/d2/f6c9d296565a7f7669d8d01c918a09a3.jpg'
-
         };
 
         async function searchProducts() {
             const query = document.getElementById('searchQuery').value;
+            const sortBy = document.getElementById('searchSort').value;
 
             if (!query) {
                 alert('Please enter a search query.');
@@ -109,12 +140,10 @@
             }
 
             try {
-                const response = await fetch(`/api/products/search?query=${encodeURIComponent(query)}`);
-
+                const response = await fetch(`/api/products/search?query=${encodeURIComponent(query)}&sortBy=${sortBy}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-
                 const products = await response.json();
                 const resultsDiv = document.getElementById('results');
                 resultsDiv.innerHTML = '';
@@ -123,6 +152,7 @@
                     resultsDiv.innerHTML = '<p>No products found.</p>';
                 } else {
                     products.forEach(product => {
+                        const ratingClass = product.seller.rating >= 4.5 ? 'rating-high' : product.seller.rating >= 3.8 ? 'rating-medium' : 'rating-low';
                         const productDiv = document.createElement('div');
                         productDiv.className = 'product-card';
                         productDiv.innerHTML = `
@@ -130,6 +160,10 @@
                             <h3>${product.name}</h3>
                             <p>${product.description}</p>
                             <div class="price">$${product.price.toFixed(2)}</div>
+                            <div class="seller-info">
+                                <div class="rating-box ${ratingClass}">${product.seller.rating}</div>
+                                <span>SATICI: ${product.seller.name}</span>
+                            </div>
                         `;
                         resultsDiv.appendChild(productDiv);
                     });
@@ -141,8 +175,9 @@
         }
 
         async function fetchAllProducts() {
+            const sortBy = document.getElementById('allProductsSort').value;
             try {
-                const response = await fetch('/api/products/');
+                const response = await fetch(`/api/products/?sortBy=${sortBy}`);
                 const products = await response.json();
                 const allProductsDiv = document.getElementById('all-products');
                 allProductsDiv.innerHTML = '';
@@ -150,9 +185,8 @@
                 if (products.length === 0) {
                     allProductsDiv.innerHTML = '<p>No products available.</p>';
                 } else {
-                    products.sort((p1, p2) => calculateScore(p2.seller) - calculateScore(p1.seller));
-
                     products.forEach(product => {
+                        const ratingClass = product.seller.rating >= 4.5 ? 'rating-high' : product.seller.rating >= 3.8 ? 'rating-medium' : 'rating-low';
                         const productDiv = document.createElement('div');
                         productDiv.className = 'product-card';
                         productDiv.innerHTML = `
@@ -160,6 +194,10 @@
                             <h3>${product.name}</h3>
                             <p>${product.description}</p>
                             <div class="price">$${product.price.toFixed(2)}</div>
+                            <div class="seller-info">
+                                <div class="rating-box ${ratingClass}">${product.seller.rating}</div>
+                                <span>SATICI: ${product.seller.name}</span>
+                            </div>
                         `;
                         allProductsDiv.appendChild(productDiv);
                     });
@@ -170,18 +208,6 @@
             }
         }
 
-        function calculateScore(seller) {
-            if (!seller) return 0;
-
-            const promotionStatus = seller.promotionStatus;
-            const rating = seller.rating;
-
-            const promotionScore = (promotionStatus !== undefined && promotionStatus) ? 10 : 0;
-            const ratingScore = (rating !== undefined) ? rating * 5 : 0;
-
-            return promotionScore + ratingScore;
-        }
-
         window.onload = fetchAllProducts;
     </script>
 </head>
@@ -189,12 +215,27 @@
 <div class="container">
     <h1>Product Search</h1>
     <div class="search-container">
-        <input type="text" id="searchQuery" placeholder="Search for products"/>
+        <input type="text" id="searchQuery" placeholder="Search for products...">
+        <select id="searchSort">
+            <option value="score">Sort by Score</option>
+            <option value="priceAsc">Sort by Price (Low to High)</option>
+            <option value="priceDesc">Sort by Price (High to Low)</option>
+        </select>
         <button onclick="searchProducts()">Search</button>
     </div>
+
+    <h2>Search Results</h2>
     <div id="results"></div>
 
     <h2>All Products</h2>
+    <div class="sort-container">
+        <select id="allProductsSort">
+            <option value="score">Sort by Score</option>
+            <option value="priceAsc">Sort by Price (Low to High)</option>
+            <option value="priceDesc">Sort by Price (High to Low)</option>
+        </select>
+        <button onclick="fetchAllProducts()">Fetch All Products</button>
+    </div>
     <div id="all-products"></div>
 </div>
 </body>

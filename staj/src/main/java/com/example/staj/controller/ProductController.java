@@ -17,22 +17,23 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
     @Autowired
-    private ProductService ProductService;
+    private ProductService productService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam String query) {
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam String query, @RequestParam(required = false, defaultValue = "score") String sortBy) {
         try {
-            List<Product> products = ProductService.searchProducts(query);
+            List<Product> products = productService.searchProducts(query, sortBy);
             return ResponseEntity.ok(products);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
     }
+
     @GetMapping("/")
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false, defaultValue = "score") String sortBy) {
         try {
-            List<Product> products = ProductService.getAllProducts();
+            List<Product> products = productService.getAllProducts(sortBy);
             return ResponseEntity.ok(products);
         } catch (Exception e) {
             e.printStackTrace();
