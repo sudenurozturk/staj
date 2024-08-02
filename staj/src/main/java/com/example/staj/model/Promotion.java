@@ -7,37 +7,37 @@ import jakarta.persistence.*;
 public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer promotionID;
+    private Integer PromotionID;
 
-    private Integer sellerID;
-    private Double promotionValue;
+    private Integer SellerID;
+    private Double PromotionValue;
 
     @ManyToOne
-    @JoinColumn(name = "sellerID", insertable = false, updatable = false)
+    @JoinColumn(name = "SellerID", insertable = false, updatable = false)
     private Seller seller;
 
     public Integer getPromotionID() {
-        return promotionID;
+        return PromotionID;
     }
 
     public void setPromotionID(Integer promotionID) {
-        this.promotionID = promotionID;
+        this.PromotionID = promotionID;
     }
 
     public Integer getSellerID() {
-        return sellerID;
+        return SellerID;
     }
 
     public void setSellerID(Integer sellerID) {
-        this.sellerID = sellerID;
+        this.SellerID = sellerID;
     }
 
     public Double getPromotionValue() {
-        return promotionValue;
+        return PromotionValue;
     }
 
     public void setPromotionValue(Double promotionValue) {
-        this.promotionValue = promotionValue;
+        this.PromotionValue = promotionValue;
     }
 
     public Seller getSeller() {

@@ -12,11 +12,11 @@ public class Product {
 
     private String name;
     private String description;
-    private Integer sellerID;
+    private Integer SellerID;
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "sellerID", insertable = false, updatable = false)
+    @JoinColumn(name = "SellerID", insertable = false, updatable = false)
     private Seller seller;
 
     public Integer getProductID() {
@@ -44,11 +44,11 @@ public class Product {
     }
 
     public Integer getSellerID() {
-        return sellerID;
+        return SellerID;
     }
 
     public void setSellerID(Integer sellerID) {
-        this.sellerID = sellerID;
+        this.SellerID = sellerID;
     }
 
     public Double getPrice() {

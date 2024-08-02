@@ -8,34 +8,34 @@ import jakarta.persistence.*;
 public class Seller {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer sellerID;
+    private Integer SellerID;
 
-    private String name;
-    private Boolean promotionStatus;
+    private String Name;
+    private Boolean PromotionStatus = false;
     private Double rating;
 
     public Integer getSellerID() {
-        return sellerID;
+        return SellerID;
     }
 
     public void setSellerID(Integer sellerID) {
-        this.sellerID = sellerID;
+        this.SellerID = sellerID;
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.Name = name;
     }
 
     public Boolean getPromotionStatus() {
-        return promotionStatus;
+        return PromotionStatus;
     }
 
     public void setPromotionStatus(Boolean promotionStatus) {
-        this.promotionStatus = promotionStatus;
+        this.PromotionStatus = promotionStatus;
     }
 
     public Double getRating() {
@@ -45,5 +45,7 @@ public class Seller {
     public void setRating(Double rating) {
         this.rating = rating;
     }
+
+
 }
 

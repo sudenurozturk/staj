@@ -8,37 +8,37 @@ import jakarta.persistence.*;
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ratingID;
+    private Integer RatingID;
 
-    private Integer sellerID;
-    private Double ratingValue;
+    private Integer SellerID;
+    private Double RatingValue;
 
     @ManyToOne
-    @JoinColumn(name = "sellerID", insertable = false, updatable = false)
+    @JoinColumn(name = "SellerID", insertable = false, updatable = false)
     private Seller seller;
 
     public Integer getRatingID() {
-        return ratingID;
+        return RatingID;
     }
 
     public void setRatingID(Integer ratingID) {
-        this.ratingID = ratingID;
+        this.RatingID = ratingID;
     }
 
     public Integer getSellerID() {
-        return sellerID;
+        return SellerID;
     }
 
     public void setSellerID(Integer sellerID) {
-        this.sellerID = sellerID;
+        this.SellerID = sellerID;
     }
 
     public Double getRatingValue() {
-        return ratingValue;
+        return RatingValue;
     }
 
     public void setRatingValue(Double ratingValue) {
-        this.ratingValue = ratingValue;
+        this.RatingValue = ratingValue;
     }
 
     public Seller getSeller() {

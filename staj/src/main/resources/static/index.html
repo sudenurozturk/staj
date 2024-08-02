@@ -1,16 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Product Search</title>
+    <title>Product Search and List</title>
     <style>
-        /* Basit stil ekleyelim */
-        #results div {
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        #results, #all-products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .product-card {
             border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            width: 250px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #fff;
+            transition: transform 0.2s;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .product-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .product-card p {
+            color: #555;
+        }
+        .product-card .price {
+            font-weight: bold;
+            color: #e94e77;
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
             padding: 10px;
-            margin-bottom: 10px;
+            width: 300px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #e94e77;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #d43f60;
         }
     </style>
     <script>
+        // Ürünlere özel görsel URL'leri
+        const productImages = {
+            'Televizyon A': 'https://i.pinimg.com/564x/7b/32/34/7b32344744ee28426dc40ce926b53753.jpg',
+            'Televizyon H': 'https://i.pinimg.com/564x/c4/b3/cf/c4b3cfad0fb639b82ae7e0c3c462048f.jpg',
+            'Bilgisayar A': 'https://i.pinimg.com/474x/b5/fb/5f/b5fb5f4716edc957765a88823174240b.jpg',
+            'Bilgisayar B': 'https://i.pinimg.com/564x/70/f0/4e/70f04ee17c857350c55de8efe1ee33ce.jpg',
+            'Televizyon F': 'https://i.pinimg.com/564x/8c/d3/1b/8cd31b2b8d2299d32e67577618265c93.jpg',
+            'Tablet A': 'https://i.pinimg.com/564x/b3/c9/37/b3c93785185172ed8647c09651f1f7a2.jpg',
+            'Televizyon C': 'https://i.pinimg.com/564x/17/27/3e/17273e4e1078d1f500adcb63efd1163e.jpg',
+            'Tablet B': 'https://i.pinimg.com/474x/47/3d/23/473d2320a0f740cc49d0c4bf5321e2b7.jpg',
+            'Tablet C': 'https://i.pinimg.com/474x/5a/9d/dc/5a9ddc460f5a7ed838406b5974a3b147.jpg',
+            'Tablet D': 'https://i.pinimg.com/474x/2b/2e/09/2b2e093faeeeb62766162c5263e8b40d.jpg',
+            'Klima A': 'https://i.pinimg.com/474x/ec/5c/82/ec5c82b162b5b5e5fcd7967b0946165b.jpg',
+            'Televizyon E': 'https://i.pinimg.com/564x/57/80/ac/5780ac2b64c9f4177054455119124a8e.jpg',
+            'Televizyon B': 'https://i.pinimg.com/564x/dc/19/d3/dc19d308d6e6399c9553bda53c549754.jpg',
+            'Televizyon D': 'https://i.pinimg.com/564x/c8/9e/39/c89e394d1f62e48d7946bcc08632d239.jpg',
+            'Klima B': 'https://i.pinimg.com/474x/ff/87/d9/ff87d90b36896ed5e554d0143c76cede.jpg',
+            'Televizyon G': 'https://i.pinimg.com/564x/5d/26/47/5d26474230ad7c5dab58f829ce365211.jpg',
+            'Headphone': 'https://i.pinimg.com/474x/46/4e/88/464e8802e9c14777e03847a04ea107b3.jpg',
+            'Klima C': 'https://i.pinimg.com/474x/32/c3/4f/32c34fbd4afd61ae418858cab5753be6.jpg',
+            'Klima D': 'https://i.pinimg.com/474x/f6/c9/d2/f6c9d296565a7f7669d8d01c918a09a3.jpg'
+
+        };
+
         async function searchProducts() {
             const query = document.getElementById('searchQuery').value;
 
@@ -35,10 +124,12 @@
                 } else {
                     products.forEach(product => {
                         const productDiv = document.createElement('div');
+                        productDiv.className = 'product-card';
                         productDiv.innerHTML = `
-                            <strong>${product.name}</strong><br>
-                            ${product.description}<br>
-                            Price: $${product.price.toFixed(2)}
+                            <img src="${productImages[product.name] || 'https://via.placeholder.com/250'}" alt="Product Image">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <div class="price">$${product.price.toFixed(2)}</div>
                         `;
                         resultsDiv.appendChild(productDiv);
                     });
@@ -48,12 +139,63 @@
                 alert('An error occurred while searching for products.');
             }
         }
+
+        async function fetchAllProducts() {
+            try {
+                const response = await fetch('/api/products/');
+                const products = await response.json();
+                const allProductsDiv = document.getElementById('all-products');
+                allProductsDiv.innerHTML = '';
+
+                if (products.length === 0) {
+                    allProductsDiv.innerHTML = '<p>No products available.</p>';
+                } else {
+                    products.sort((p1, p2) => calculateScore(p2.seller) - calculateScore(p1.seller));
+
+                    products.forEach(product => {
+                        const productDiv = document.createElement('div');
+                        productDiv.className = 'product-card';
+                        productDiv.innerHTML = `
+                            <img src="${productImages[product.name] || 'https://via.placeholder.com/250'}" alt="Product Image">
+                            <h3>${product.name}</h3>
+                            <p>${product.description}</p>
+                            <div class="price">$${product.price.toFixed(2)}</div>
+                        `;
+                        allProductsDiv.appendChild(productDiv);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching all products:', error);
+                alert('An error occurred while fetching all products.');
+            }
+        }
+
+        function calculateScore(seller) {
+            if (!seller) return 0;
+
+            const promotionStatus = seller.promotionStatus;
+            const rating = seller.rating;
+
+            const promotionScore = (promotionStatus !== undefined && promotionStatus) ? 10 : 0;
+            const ratingScore = (rating !== undefined) ? rating * 5 : 0;
+
+            return promotionScore + ratingScore;
+        }
+
+        window.onload = fetchAllProducts;
     </script>
 </head>
 <body>
-<h1>Product Search</h1>
-<input type="text" id="searchQuery" placeholder="Search for products"/>
-<button onclick="searchProducts()">Search</button>
-<div id="results"></div>
+<div class="container">
+    <h1>Product Search</h1>
+    <div class="search-container">
+        <input type="text" id="searchQuery" placeholder="Search for products"/>
+        <button onclick="searchProducts()">Search</button>
+    </div>
+    <div id="results"></div>
+
+    <h2>All Products</h2>
+    <div id="all-products"></div>
+</div>
 </body>
 </html>

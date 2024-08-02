@@ -39,24 +39,31 @@ public class ProductService {
                     Seller s2 = sellerRepository.findById(p2.getSellerID()).orElse(null);
                     if (s1 == null || s2 == null) return 0;
 
-                    double score1 = calculateScore(s1);
-                    double score2 = calculateScore(s2);
+                    double score1 = calculateScore(p1, s1);
+                    double score2 = calculateScore(p2, s2);
 
                     return Double.compare(score2, score1);
                 })
                 .collect(Collectors.toList());
     }
 
-    private double calculateScore(Seller seller) {
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    private double calculateScore(Product product, Seller seller) {
         if (seller == null) return 0.0;
 
-        Boolean promotionStatus = seller.getPromotionStatus();
-        Double rating = seller.getRating();
+        Boolean sellerPromotionStatus = seller.getPromotionStatus();
+        Double sellerRating = seller.getRating();
+        Boolean productPromotionStatus = seller.getPromotionStatus(); // Ürün promosyon durumu
+        Double productPrice = product.getPrice(); // Ürün fiyatı, opsiyonel eklenebilir
 
-        // Null kontrolü ve varsayılan değer kullanımı
-        double promotionScore = (promotionStatus != null && promotionStatus) ? 10 : 0;
-        double ratingScore = (rating != null) ? rating * 5 : 0;
+        double sellerPromotionScore = (sellerPromotionStatus != null && sellerPromotionStatus) ? 10 : 0;
+        double productPromotionScore = (productPromotionStatus != null && productPromotionStatus) ? 10 : 0;
+        double sellerRatingScore = (sellerRating != null) ? sellerRating * 5 : 0;
 
-        return promotionScore + ratingScore;
+        // Puanlama hesaplama
+        return sellerPromotionScore + productPromotionScore + sellerRatingScore;
     }
 }
