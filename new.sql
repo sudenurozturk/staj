@@ -55,7 +55,6 @@ CREATE TABLE `promotions` (
   `PromotionID` int NOT NULL AUTO_INCREMENT,
   `SellerID` int DEFAULT NULL,
   `PromotionValue` double DEFAULT NULL,
-  `promotion_value` double DEFAULT NULL,
   PRIMARY KEY (`PromotionID`),
   KEY `SellerID` (`SellerID`),
   CONSTRAINT `promotions_ibfk_1` FOREIGN KEY (`SellerID`) REFERENCES `sellers` (`SellerID`)
@@ -83,7 +82,6 @@ CREATE TABLE `ratings` (
   `RatingID` int NOT NULL AUTO_INCREMENT,
   `SellerID` int DEFAULT NULL,
   `RatingValue` double DEFAULT NULL,
-  `rating_value` double DEFAULT NULL,
   PRIMARY KEY (`RatingID`),
   KEY `SellerID` (`SellerID`),
   CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`SellerID`) REFERENCES `sellers` (`SellerID`)
@@ -112,7 +110,6 @@ CREATE TABLE `sellers` (
   `Name` varchar(255) NOT NULL,
   `PromotionStatus` int DEFAULT '0',
   `Rating` double DEFAULT NULL,
-  `promotion_status` int DEFAULT NULL,
   PRIMARY KEY (`SellerID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
