@@ -105,9 +105,12 @@
         .rating-low {
             background-color: #F44336;
         }
+        .promo {
+            border: 2px solid #ddd;
+            background-color: #d8e1d3;
+        }
     </style>
     <script>
-
         const productImages = {
             'Televizyon A': 'https://i.pinimg.com/564x/7b/32/34/7b32344744ee28426dc40ce926b53753.jpg',
             'Televizyon H': 'https://i.pinimg.com/564x/c4/b3/cf/c4b3cfad0fb639b82ae7e0c3c462048f.jpg',
@@ -129,6 +132,8 @@
             'Klima C': 'https://i.pinimg.com/474x/32/c3/4f/32c34fbd4afd61ae418858cab5753be6.jpg',
             'Klima D': 'https://i.pinimg.com/474x/f6/c9/d2/f6c9d296565a7f7669d8d01c918a09a3.jpg'
         };
+
+        const PROMO_SELLERS = ['John Electronics', 'Bob Tech', 'Eve Home Appliance'];
 
         async function searchProducts() {
             const query = document.getElementById('searchQuery').value;
@@ -153,8 +158,9 @@
                 } else {
                     products.forEach(product => {
                         const ratingClass = product.seller.rating >= 4.5 ? 'rating-high' : product.seller.rating >= 3.8 ? 'rating-medium' : 'rating-low';
+                        const promoClass = PROMO_SELLERS.includes(product.seller.name) ? 'promo' : '';
                         const productDiv = document.createElement('div');
-                        productDiv.className = 'product-card';
+                        productDiv.className = `product-card ${promoClass}`;
                         productDiv.innerHTML = `
                             <img src="${productImages[product.name] || 'https://via.placeholder.com/250'}" alt="Product Image">
                             <h3>${product.name}</h3>
@@ -162,7 +168,7 @@
                             <div class="price">$${product.price.toFixed(2)}</div>
                             <div class="seller-info">
                                 <div class="rating-box ${ratingClass}">${product.seller.rating}</div>
-                                <span>SATICI: ${product.seller.name}</span>
+                                <span style>SATICI: ${product.seller.name}</span>
                             </div>
                         `;
                         resultsDiv.appendChild(productDiv);
@@ -187,8 +193,9 @@
                 } else {
                     products.forEach(product => {
                         const ratingClass = product.seller.rating >= 4.5 ? 'rating-high' : product.seller.rating >= 3.8 ? 'rating-medium' : 'rating-low';
+                        const promoClass = PROMO_SELLERS.includes(product.seller.name) ? 'promo' : '';
                         const productDiv = document.createElement('div');
-                        productDiv.className = 'product-card';
+                        productDiv.className = `product-card ${promoClass}`;
                         productDiv.innerHTML = `
                             <img src="${productImages[product.name] || 'https://via.placeholder.com/250'}" alt="Product Image">
                             <h3>${product.name}</h3>
