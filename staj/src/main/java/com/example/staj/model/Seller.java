@@ -11,7 +11,7 @@ public class Seller {
     private Integer SellerID;
 
     private String Name;
-    private Boolean PromotionStatus = false;
+    private Integer PromotionStatus = 0;
     private Double rating;
 
     public Integer getSellerID() {
@@ -30,12 +30,12 @@ public class Seller {
         this.Name = name;
     }
 
-    public Boolean getPromotionStatus() {
+    public Integer getPromotionStatus() {
         return PromotionStatus;
     }
 
-    public void setPromotionStatus(Boolean promotionStatus) {
-        this.PromotionStatus = promotionStatus;
+    public void setPromotionStatus(Integer PromotionStatus) {
+        this.PromotionStatus = PromotionStatus;
     }
 
     public Double getRating() {
@@ -48,4 +48,3 @@ public class Seller {
 
 
 }
-
